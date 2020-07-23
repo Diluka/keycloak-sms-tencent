@@ -12,10 +12,10 @@
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
                     <input id="totp"
-                        name="phoneNumber" 
+                        name="phone" 
                         type="text" 
                         class="${properties.kcInputClass!}"
-                        value="${phoneNumber!''}"
+                        value="${phone!''}"
                         />
                 </div>
             </div>
@@ -38,12 +38,12 @@
             </div>
 
             <div class="${properties.kcFormGroupClass!}">
-                <#--  <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
+                <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
                     <div class="${properties.kcFormOptionsWrapperClass!}">
                     
-                        <span><a href="${url.loginUrl}">${kcSanitize(msg("usernameOrEmail"))?no_esc}</a></span>
+                        <span><a href="${url.loginUrl}">${kcSanitize(msg("backToLogin"))?no_esc}</a></span>
                     </div>
-                </div>  -->
+                </div>
 
                 <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                     <div class="${properties.kcFormButtonsWrapperClass!}">
@@ -59,13 +59,12 @@
                 </div>
             </div>
         </form>
-        
-        
         <#if client?? && client.baseUrl?has_content>
-            <p><a href="${client.baseUrl}">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
+            
         </#if>
         <#if sendCode??>
             <script>
+                window.onLo
                 let getcodeBtn =  document.querySelector("#getcode");
                 getcodeBtn.disabled = "disabled"
                 let a = 60;
@@ -80,16 +79,6 @@
                     }
                 },1000)
             </script>
-        </#if>
-
-        <#if realm.password && realm.registrationAllowed && !registrationDisabled??>
-            <div id="kc-registration" style="text-align:center">
-                <#if realm.resetPasswordAllowed>
-                    <span><a tabindex="5" href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
-                </#if>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <span>${msg("noAccount")} <a tabindex="6" href="${url.registrationUrl}">${msg("doRegister")}</a></span>
-            </div>
         </#if>
     </#if>
 </@layout.registrationLayout>
