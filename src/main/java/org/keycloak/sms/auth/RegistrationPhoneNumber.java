@@ -32,7 +32,11 @@ public class RegistrationPhoneNumber implements FormAction, FormActionFactory {
 	public static final String PROVIDER_ID = "registration-phonenumber-action";
 	public static final String FIELD_PHONENUMBER = "user.attributes.phoneNumber";
 
+	//	手机号码不能为空
 	public static final String MISSING_FIELD_PHONENUMBER = "missingPhoneNumberMessage";
+	
+	// 手机号码已注册
+	public static final String EXIST_FIELD_PHONENUMBER = "hasExistPhoneNumberMessage";
 
 	@Override
 	public String getHelpText() {
@@ -49,8 +53,16 @@ public class RegistrationPhoneNumber implements FormAction, FormActionFactory {
 		MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
 		List<FormMessage> errors = new ArrayList<>();
 		context.getEvent().detail(Details.REGISTER_METHOD, "form");
-		if (Validation.isBlank(formData.getFirst(FIELD_PHONENUMBER))) {
+		String phoneNumberValueString = formData.getFirst(FIELD_PHONENUMBER);
+		if (Validation.isBlank(phoneNumberValueString)) {
 			errors.add(new FormMessage(FIELD_PHONENUMBER, MISSING_FIELD_PHONENUMBER));
+		} else {
+			List<UserModel> userModels = context.getSession().users().searchForUserByUserAttribute("phoneNumber",
+					phoneNumberValueString, context.getRealm());
+
+			if (userModels != null && userModels.size() > 0) {
+				errors.add(new FormMessage(FIELD_PHONENUMBER, EXIST_FIELD_PHONENUMBER));
+			}
 		}
 
 		if (errors.size() > 0) {
