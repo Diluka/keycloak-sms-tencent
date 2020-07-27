@@ -143,7 +143,6 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory, Configurab
         return "短信验证";
     }
 
-
     // 显示内容
     @Override
     public String getDisplayType() {

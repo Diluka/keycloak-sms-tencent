@@ -177,13 +177,13 @@ public class SmsAuthenticator implements Authenticator {
 			loginFormsProvider.setAttribute("scene", "注册");
 			return;
 		case FLOW_REST_CREDENTIALS:
-			loginFormsProvider.setAttribute("scene", "重置密码");
+			loginFormsProvider.setAttribute("scene", "忘记密码？");
 			return;
 		case FLOW_FIRST_BROKER_LOGIN:
 			loginFormsProvider.setAttribute("scene", "绑定/注册新用户");
 			return;
 		case FLOW_AUTHENTICATE:
-			loginFormsProvider.setAttribute("scene", "手机号验证");
+			loginFormsProvider.setAttribute("scene", "登录");
 			return;
 		default:
 			return;
