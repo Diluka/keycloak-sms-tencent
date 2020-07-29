@@ -16,3 +16,5 @@
 #
 
 org.keycloak.sms.auth.SmsAuthenticatorFactory
+
+org.keycloak.sms.auth.LoginOnPhoneNumberFactory
