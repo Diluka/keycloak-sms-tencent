@@ -70,8 +70,7 @@ public class LoginOnPhoneNumberFactory implements AuthenticatorFactory, DisplayT
 	}
 
 	public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
-			AuthenticationExecutionModel.Requirement.REQUIRED, AuthenticationExecutionModel.Requirement.ALTERNATIVE,
-			AuthenticationExecutionModel.Requirement.DISABLED };
+			AuthenticationExecutionModel.Requirement.REQUIRED };
 
 	@Override
 	public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
