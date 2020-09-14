@@ -110,8 +110,9 @@ public class LoginOnPhoneNumberAsUserName extends AbstractUsernameFormAuthentica
 	// 刷新验证码
 	private void refreshVerificationCode(AuthenticationFlowContext context) {
 		String codeImg = getVerificationCode(context);
-		MultivaluedMap<String, String> formData = new MultivaluedMapImpl<>();
-		formData.add(FIELD_VERIFICATIONCODE_IMAGE, codeImg);
+//		MultivaluedMap<String, String> formData = new MultivaluedMapImpl<>();
+		MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
+		formData.putSingle(FIELD_VERIFICATIONCODE_IMAGE, codeImg);
 		Response challengeResponse = challenge(context, formData);
 		context.challenge(challengeResponse);
 	}
