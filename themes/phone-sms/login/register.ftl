@@ -13,18 +13,19 @@
                 </div>
             </div>
 
-            <div class="${properties.kcFormGroupClass!} ${messagesPerField.printIfExists('lastName',properties.kcFormGroupErrorClass!)}">
+            -->
+
+            <#--  <input type="hidden" name="firstName" value="-" />  -->
+            <input type="hidden" name="lastName" value="^_^" />
+
+            <div class="${properties.kcFormGroupClass!} ${messagesPerField.printIfExists('firstName',properties.kcFormGroupErrorClass!)}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="lastName" class="${properties.kcLabelClass!}">${msg("lastName")}</label>
+                    <label for="firstName" class="${properties.kcLabelClass!}">用户姓名</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="lastName" class="${properties.kcInputClass!}" name="lastName" value="${(register.formData.lastName!'')}" />
+                    <input type="text" id="firstName" class="${properties.kcInputClass!}" name="firstName" value="${(register.formData.firstName!'')}" />
                 </div>
-            </div>  -->
-
-            <input type="hidden" name="firstName" value="-" />
-            <input type="hidden" name="lastName" value="-" />
-
+            </div> 
             
 
           <#if !realm.registrationEmailAsUsername>
@@ -47,12 +48,12 @@
                 </div>
             </div>
 
-            <div class="${properties.kcFormGroupClass!} ${messagesPerField.printIfExists('user.attributes.phoneNumber',properties.kcFormGroupErrorClass!)}">
+            <div class="${properties.kcFormGroupClass!} ${messagesPerField.printIfExists('user.phoneNumber',properties.kcFormGroupErrorClass!)}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="user.attributes.phoneNumber" class="${properties.kcLabelClass!}">${msg("phoneNumber")}</label>
+                    <label for="user.phoneNumber" class="${properties.kcLabelClass!}">${msg("phoneNumber")}</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="tel" class="${properties.kcInputClass!}" id="user.attributes.phoneNumber" name="user.attributes.phoneNumber" autocomplete="user.attributes.phoneNumber" />
+                    <input type="tel" class="${properties.kcInputClass!}" id="user.phoneNumber" name="user.phoneNumber" autocomplete="user.phoneNumber" />
                 </div>
             </div>
 

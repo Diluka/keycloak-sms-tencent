@@ -78,6 +78,12 @@
                     <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
                     <input tabindex="2" id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="off" />
                 </div>
+                
+                <div class="${properties.kcFormGroupClass!}">
+                    <label for="verificationCode" class="${properties.kcLabelClass!}">${msg("verificationCode")}</label>
+                    <input tabindex="3" id="verificationCode" class="${properties.kcInputClass!}" name="verificationCode" type="text" autocomplete="off" />
+                    <img style="width:100px;height:35px;margin-top:5px" src="data:image/png;base64,${(login.verificationCodeImg!'')}" alt="验证码"/>
+                </div>
 
                 <div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
                     <div id="kc-form-options">

@@ -27,20 +27,20 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistrationPhoneNumber implements FormAction, FormActionFactory {
+public class RegistrationValidateUserName implements FormAction, FormActionFactory {
 
-	public static final String PROVIDER_ID = "registration-phonenumber-action";
-	public static final String FIELD_PHONENUMBER = "user.phoneNumber";
+	public static final String PROVIDER_ID = "registration-username-action";
+	public static final String FIELD_USERNAME = "user.userName";
 
 	// 手机号码不能为空
-	public static final String MISSING_FIELD_PHONENUMBER = "missingPhoneNumberMessage";
+	public static final String MISSING_FIELD_USERNAME = "missingUserNameMessage";
 
 	// 手机号码已注册
-	public static final String EXIST_FIELD_PHONENUMBER = "hasExistPhoneNumberMessage";
+	public static final String EXIST_FIELD_USERNAME = "hasExistUserNameMessage";
 
 	@Override
 	public String getHelpText() {
-		return "手机号码不能为空";
+		return "用户名不能为空";
 	}
 
 	@Override
@@ -53,15 +53,15 @@ public class RegistrationPhoneNumber implements FormAction, FormActionFactory {
 		MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
 		List<FormMessage> errors = new ArrayList<>();
 		context.getEvent().detail(Details.REGISTER_METHOD, "form");
-		String phoneNumberValueString = formData.getFirst(FIELD_PHONENUMBER);
-		if (Validation.isBlank(phoneNumberValueString)) {
-			errors.add(new FormMessage(FIELD_PHONENUMBER, MISSING_FIELD_PHONENUMBER));
+		String userNameString = formData.getFirst(FIELD_USERNAME);
+		if (Validation.isBlank(userNameString)) {
+			errors.add(new FormMessage(FIELD_USERNAME, MISSING_FIELD_USERNAME));
 		} else {
 
-			UserModel userModel = context.getSession().users().getUserByPhoneNumber(phoneNumberValueString,
+			UserModel userModel = context.getSession().users().getUserByUsername(userNameString,
 					context.getRealm());
 			if (userModel != null) {
-				errors.add(new FormMessage(FIELD_PHONENUMBER, EXIST_FIELD_PHONENUMBER));
+				errors.add(new FormMessage(FIELD_USERNAME, EXIST_FIELD_USERNAME));
 			}
 		}
 
@@ -78,12 +78,12 @@ public class RegistrationPhoneNumber implements FormAction, FormActionFactory {
 	public void success(FormContext context) {
 		UserModel user = context.getUser();
 		MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
-		user.setPhoneNumber(formData.getFirst(FIELD_PHONENUMBER));
+		user.setUsername(formData.getFirst(FIELD_USERNAME));
 	}
 
 	@Override
 	public void buildPage(FormContext context, LoginFormsProvider form) {
-		form.setAttribute("phoneNumberRequired", true);
+		form.setAttribute("userNameRequired", true);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class RegistrationPhoneNumber implements FormAction, FormActionFactory {
 
 	@Override
 	public String getDisplayType() {
-		return "phoneNumber Validation";
+		return "userName Validation";
 	}
 
 	@Override

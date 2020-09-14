@@ -29,8 +29,6 @@ public class SmsAuthenticator implements Authenticator {
 	private static final String SUBMIT_GETCODE = "getcode";
 	private static final String SUBMIT_OK = "ok";
 
-	private static final String USER_ATTR_phoneNumber_KEY = "phoneNumber";
-
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {
 		logger.infof("auth");
@@ -40,8 +38,8 @@ public class SmsAuthenticator implements Authenticator {
 			UserModel userModel = context.getUser();
 			if (userModel != null) {
 				// 判断用户是否有手机号 有就直接成功
-				List phoneNumberAttr = userModel.getAttribute(USER_ATTR_phoneNumber_KEY);
-				if (phoneNumberAttr != null && phoneNumberAttr.size() == 1) {
+				String phoneNumber = userModel.getPhoneNumber();
+				if (phoneNumber != null) {
 					logger.infof("content success");
 					context.success();
 					return;
@@ -56,8 +54,7 @@ public class SmsAuthenticator implements Authenticator {
 	}
 
 	public UserModel findUserModelByphoneNumber(String phoneNumber, UserProvider userProvider, RealmModel realmModel) {
-		List<UserModel> userModels = userProvider.searchForUserByUserAttribute(USER_ATTR_phoneNumber_KEY, phoneNumber, realmModel);
-		return userModels != null && userModels.size() == 1 ? userModels.get(0) : null;
+		return userProvider.getUserByPhoneNumber(phoneNumber, realmModel);
 	}
 
 	@Override
@@ -133,13 +130,13 @@ public class SmsAuthenticator implements Authenticator {
 				} else if (FLOW_REGISTRATION.equals(flowPath)) {
 					UserModel cUser = context.getUser();
 					user = cUser == null ? userProvider.addUser(realmModel, phoneNumber) : cUser;
-					user.setSingleAttribute(USER_ATTR_phoneNumber_KEY, phoneNumber);
+					user.setPhoneNumber(phoneNumber);
 				} else if (FLOW_FIRST_BROKER_LOGIN.equals(flowPath)) {
 					user = this.findUserModelByphoneNumber(phoneNumber, userProvider, realmModel);
 					if (user == null) {
 						UserModel cUser = context.getUser();
 						user = cUser == null ? userProvider.addUser(realmModel, phoneNumber) : cUser;
-						user.setSingleAttribute(USER_ATTR_phoneNumber_KEY, phoneNumber);
+						user.setPhoneNumber(phoneNumber);
 					}
 				} else if (FLOW_AUTHENTICATE.equals(flowPath)) {
 					user = this.findUserModelByphoneNumber(phoneNumber, userProvider, realmModel);
