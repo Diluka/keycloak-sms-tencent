@@ -49,3 +49,6 @@ keycloak 短信验证
 
    ![image-20200731172020264](keycloak.assets/image-20200731172020264.png)
 
+
+## 2020-09-14
+v1.0+ 版本需要搭配 修改keycloak源码 自行编译打包后的系统，才能使用！！！（修改keycloak源码，将phoneNumber加入User_Entity表中）
