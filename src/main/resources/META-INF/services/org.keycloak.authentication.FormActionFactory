@@ -1,5 +1,3 @@
 org.keycloak.sms.auth.RegistrationPhoneNumber
 
 org.keycloak.sms.auth.RegistrationValidateUserName
-
-org.keycloak.sms.auth.VerificationCode

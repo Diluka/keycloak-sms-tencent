@@ -5,12 +5,9 @@
  */
 package org.keycloak.sms.auth;
 
-import java.awt.image.RenderedImage;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -18,16 +15,13 @@ import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
-import org.keycloak.authentication.FormContext;
 import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAuthenticator;
-import org.keycloak.credential.CredentialModel;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
 import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ModelDuplicateException;
 import org.keycloak.models.RealmModel;
-import org.keycloak.models.UserCredentialManager;
 import org.keycloak.models.UserModel;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -45,6 +39,10 @@ public class LoginOnPhoneNumberAsUserName extends AbstractUsernameFormAuthentica
 		MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
 		if (formData.containsKey("cancel")) {
 			context.cancelLogin();
+			return;
+		}
+		if (formData.getFirst("refreshVerificationCodeValue").equalsIgnoreCase("true")) {
+			refreshVerificationCode(context);
 			return;
 		}
 		if (!validateForm(context, formData)) {
@@ -92,6 +90,7 @@ public class LoginOnPhoneNumberAsUserName extends AbstractUsernameFormAuthentica
 			refreshVerificationCode(context);
 			return false;
 		}
+		removeCatchVerificationCode(context);
 		// 如果用户名和邮件验证不通过，则验证手机号
 		if (validateUserAndPassword(context, formData) == false) {
 			// 此处添加通过手机号码作为用户名来验证
@@ -100,6 +99,13 @@ public class LoginOnPhoneNumberAsUserName extends AbstractUsernameFormAuthentica
 			return user != null && validatePassword(context, user, formData) && validateUser(context, user, formData);
 		}
 		return true;
+	}
+
+	// 移除验证码缓存
+	private void removeCatchVerificationCode(AuthenticationFlowContext context) {
+		// TODO Auto-generated method stub
+		context.getAuthenticationSession().removeAuthNote(FIELD_VERIFICATIONCODE);
+
 	}
 
 	// 比对验证码
@@ -132,46 +138,16 @@ public class LoginOnPhoneNumberAsUserName extends AbstractUsernameFormAuthentica
 
 	// 存储验证码到数据库，集群也可以使用
 	private void storeVerificationCode(AuthenticationFlowContext context, String code) {
-
-//		String sessionIdString = context.getAuthenticationSession().getParentSession().getId();
-
-//		context.getSession().setAttribute(FIELD_VERIFICATIONCODE + "_" + sessionIdString, code);
 		context.getAuthenticationSession().setAuthNote(FIELD_VERIFICATIONCODE, code);
-
-//		CredentialModel credentialsCode = new CredentialModel();
-//
-//		credentialsCode.setType(FIELD_VERIFICATIONCODE);
-//		credentialsCode.setValue(code);
-//
-//		UserCredentialManager userCredentialManager = context.getSession().userCredentialManager();
-//
-//		if (userCredentialManager.isConfiguredFor(context.getRealm(), context.getUser(), FIELD_VERIFICATIONCODE)) {
-//			userCredentialManager.updateCredential(context.getRealm(), context.getUser(), credentialsCode);
-//		} else {
-//			userCredentialManager.createCredential(context.getRealm(), context.getUser(), credentialsCode);
-//		}
+//		context.getSession().setAttribute(FIELD_VERIFICATIONCODE, code);
 	}
 
 	// 获取存储的验证码
 	private String getStoreVerificationCode(AuthenticationFlowContext context) {
 		String codeString = context.getAuthenticationSession().getAuthNote(FIELD_VERIFICATIONCODE);
+//		String code = context.getSession().getAttributeOrDefault(FIELD_VERIFICATIONCODE, "");
+//		System.out.println(code);
 		return codeString;
-//		String sessionIdString = context.getAuthenticationSession().getParentSession().getId();
-//		Object oVerificationCodeObject = context.getSession().getAttribute(FIELD_VERIFICATIONCODE + "_" + sessionIdString);
-//		return oVerificationCodeObject != null ? oVerificationCodeObject.toString() : "";
-
-//		Object oVerificationCodeObject = context.getSession().getAttribute(FIELD_VERIFICATIONCODE);
-//		return oVerificationCodeObject != null ? oVerificationCodeObject.toString() : "";
-//		String result = null;
-//		// TODO: zhangzhl
-//		List<CredentialModel> creds = context.getSession().usserCredentialManager()
-//				.getStoredCredentials(context.getRealm(), context.getUser());
-//		for (CredentialModel cred : creds) {
-//			if (cred.getType().equals(FIELD_VERIFICATIONCODE)) {
-//				result = cred.getValue();
-//			}
-//		}
-//		return result;
 	}
 
 	private boolean validateUser(AuthenticationFlowContext context, UserModel user,

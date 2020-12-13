@@ -23,6 +23,13 @@
                 return null;
             }
 
+            // 刷新验证码
+            function refreshVerificationCode(){
+
+                document.getElementById("refreshVerificationCodeValue").value="true";
+                document.getElementById("kc-form-login").submit();
+            }
+
             window.onload = function(){
                 var containerUl = document.querySelector(".zk_loginActionMethods"); 
                 if(!containerUl || containerUl.children.length<2){
@@ -76,13 +83,14 @@
 
                 <div class="${properties.kcFormGroupClass!}">
                     <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
-                    <input tabindex="2" id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="off" />
+                    <input tabindex="2" id="password" class="${properties.kcInputClass!}" name="password"  value="${(login.password!'')}"  type="password" autocomplete="off" />
                 </div>
                 
                 <div class="${properties.kcFormGroupClass!}">
                     <label for="verificationCode" class="${properties.kcLabelClass!}">${msg("verificationCode")}</label>
                     <input tabindex="3" id="verificationCode" class="${properties.kcInputClass!}" name="verificationCode" type="text" autocomplete="off" />
-                    <img style="width:100px;height:35px;margin-top:5px" src="data:image/png;base64,${(login.verificationCodeImg!'')}" alt="验证码"/>
+                    <img id="verificationCodeImg" style="width:100px;height:35px;margin-top:5px;cursor:pointer" src="data:image/png;base64,${(login.verificationCodeImg!'')}" alt="验证码" title="看不清？点击刷新" onclick="refreshVerificationCode()"/>
+                    <input type="hidden" id="refreshVerificationCodeValue" name="refreshVerificationCodeValue"/>
                 </div>
 
                 <div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
